@@ -1,4 +1,11 @@
-import React, { createContext, useReducer, useContext, useEffect } from 'react';
+import React, {
+  createContext,
+  useReducer,
+  useContext,
+  useEffect,
+  useMemo
+} from 'react';
+import { roomActions } from './actions/roomActions';
 import items from './data';
 
 const RoomContext = createContext();
@@ -7,7 +14,16 @@ const initialState = {
   rooms: [],
   sortedRooms: [],
   featuredRooms: [],
-  loading: true
+  loading: true,
+  type: 'all',
+  capacity: 1,
+  price: 0,
+  minPrice: 0,
+  maxPrice: 0,
+  minSize: 0,
+  maxSize: 0,
+  breakfast: false,
+  pets: false
 };
 
 const formatData = items => {
@@ -35,19 +51,32 @@ const roomReducer = (state, action) => {
 
 const RoomProvider = ({ children }) => {
   const [state, dispatch] = useReducer(roomReducer, initialState, init);
+  const actions = roomActions(state, dispatch);
+  const value = useMemo(() => {
+    return {
+      state,
+      actions
+    };
+  }, [state, actions]);
   useEffect(() => {
     let rooms = formatData(items);
     let featuredRooms = rooms.filter(room => room.featured);
+    let maxPrice = Math.max(...rooms.map(item => item.price));
+    let maxSize = Math.max(...rooms.map(item => item.size));
     dispatch({
       type: 'RESET',
-      payload: { rooms, sortedRooms: rooms, featuredRooms, loading: false }
+      payload: {
+        ...initialState,
+        rooms,
+        sortedRooms: rooms,
+        featuredRooms,
+        loading: false,
+        maxPrice,
+        maxSize
+      }
     });
   }, []);
-  return (
-    <RoomContext.Provider value={{ state, dispatch }}>
-      {children}
-    </RoomContext.Provider>
-  );
+  return <RoomContext.Provider value={value}>{children}</RoomContext.Provider>;
 };
 
 const useRoomState = () => {

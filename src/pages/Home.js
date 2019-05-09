@@ -11,7 +11,7 @@ const Home = () => {
     <>
       <Hero hero="defaultHero">
         <Banner
-          title="Luxuorious room"
+          title="Luxuorious rooms"
           subtitle="Deluxe rooms starting at $299"
         >
           <Link to="/rooms" className="btn-primary">
