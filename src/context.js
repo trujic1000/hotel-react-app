@@ -10,7 +10,7 @@ import items from './data';
 
 const RoomContext = createContext();
 
-const initialState = {
+let initialState = {
   rooms: [],
   sortedRooms: [],
   featuredRooms: [],
@@ -36,6 +36,23 @@ const formatData = items => {
   return tempItems;
 };
 
+(function initializeState() {
+  let rooms = formatData(items);
+  let featuredRooms = rooms.filter(room => room.featured);
+  let maxPrice = Math.max(...rooms.map(item => item.price));
+  let maxSize = Math.max(...rooms.map(item => item.size));
+  initialState = {
+    ...initialState,
+    rooms,
+    sortedRooms: rooms,
+    featuredRooms,
+    loading: false,
+    price: maxPrice,
+    maxPrice,
+    maxSize
+  };
+})();
+
 const init = state => {
   return { ...state };
 };
@@ -58,24 +75,10 @@ const RoomProvider = ({ children }) => {
       actions
     };
   }, [state, actions]);
+  const { type, capacity, price, minSize, maxSize, breakfast, pets } = state;
   useEffect(() => {
-    let rooms = formatData(items);
-    let featuredRooms = rooms.filter(room => room.featured);
-    let maxPrice = Math.max(...rooms.map(item => item.price));
-    let maxSize = Math.max(...rooms.map(item => item.size));
-    dispatch({
-      type: 'RESET',
-      payload: {
-        ...initialState,
-        rooms,
-        sortedRooms: rooms,
-        featuredRooms,
-        loading: false,
-        maxPrice,
-        maxSize
-      }
-    });
-  }, []);
+    actions.filterRooms();
+  }, [type, capacity, price, minSize, maxSize, breakfast, pets]);
   return <RoomContext.Provider value={value}>{children}</RoomContext.Provider>;
 };
 
