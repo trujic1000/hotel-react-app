@@ -78,7 +78,7 @@ const RoomProvider = ({ children }) => {
   const { type, capacity, price, minSize, maxSize, breakfast, pets } = state;
   useEffect(() => {
     actions.filterRooms();
-  }, [type, capacity, price, minSize, maxSize, breakfast, pets]);
+  }, [actions, type, capacity, price, minSize, maxSize, breakfast, pets]);
   return <RoomContext.Provider value={value}>{children}</RoomContext.Provider>;
 };
 

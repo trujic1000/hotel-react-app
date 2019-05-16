@@ -101,6 +101,7 @@ h6 {
   display: flex;
   justify-content: space-between;
 }
+
 .nav-btn {
   background: transparent;
   border: none;
@@ -119,6 +120,7 @@ h6 {
 }
 .nav-links a {
   display: block;
+  text-transform: uppercase;
   text-decoration: none;
   padding: 1rem 0;
   color: var(--mainBlack);

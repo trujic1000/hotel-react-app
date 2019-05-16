@@ -1,16 +1,12 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { useRoomState } from '../context';
-import { useRoomActions } from '../actions/roomActions';
 
-import defaultBcg from '../images/room-1.jpeg';
-import Hero from '../components/Hero';
 import StyledHero from '../components/StyledHero';
 import Banner from '../components/Banner';
 
 const SingleRoom = props => {
   const {
-    state,
     actions: { getRoom }
   } = useRoomState();
   const { slug } = props.match.params;
